@@ -5,7 +5,9 @@ import connectDB from "./config/db.js";
 import authRoute from "./routes/authRoute.js";
 import serviceRoute from "./routes/serviceRoute.js";
 import messageRoute from "./routes/messageRoute.js";
-
+import aboutMeRoute from "./routes/aboutMeRoute.js";
+import experienceRoute from "./routes/experienceRoute.js";
+import workRoute from "./routes/workRoute.js";
 
 import cors from "cors";
 
@@ -24,6 +26,9 @@ app.use(morgan("dev"));
 app.use("/api/v1", messageRoute);
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/service", serviceRoute);
+app.use("/api/v1/aboutMe", aboutMeRoute);
+app.use("/api/v1/experience", experienceRoute);
+app.use("/api/v1/updateWork", workRoute);
 
 
 app.get("/", (req, res) => {
