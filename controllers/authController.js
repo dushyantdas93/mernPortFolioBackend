@@ -1,9 +1,9 @@
 import JWT from "jsonwebtoken";
 import { comparePassword, hashPassword } from "../helpers/authHelper.js";
 import User from "../models/userModels.js";
-import { get } from "mongoose";
 
-export const registerController = async (req, res) => {
+
+export const  registerController = async (req, res) => {
   try {
     const {
       name,
@@ -81,12 +81,22 @@ export const updateProfileController = async (req, res) => {
       image,
     } = req.body;
 
+    // Debugging logs
+    console.log("Request Params:", req.params);
+    console.log("Request Body:", req.body);
+
     if (!Object.keys(req.body).length) {
       return res.status(400).send({ message: "No data provided to update" });
     }
 
+    // Validate User ID format
+    const userId = req.params.pid;
+    if (!userId?.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).send({ message: "Invalid user ID format" });
+    }
+
     // Check if user exists
-    const existingUser = await User.findById(req.params.pid);
+    const existingUser = await User.findById(userId);
     if (!existingUser) {
       return res.status(404).send({ message: "User not found" });
     }
@@ -99,7 +109,7 @@ export const updateProfileController = async (req, res) => {
 
     // Update user
     const user = await User.findByIdAndUpdate(
-      req.params.pid,
+      userId,
       {
         name,
         email,
@@ -120,12 +130,13 @@ export const updateProfileController = async (req, res) => {
       user,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error updating user:", error);
     res
       .status(500)
       .send({ success: false, message: "Error updating user", error });
   }
 };
+
 
 
 export const loginController = async (req, res) => {
@@ -155,26 +166,19 @@ export const loginController = async (req, res) => {
     // Token
 
     const token = await JWT.sign(
-      { id: user._id, role: user.role },
+      { id: user._id, role: 1 },
       process.env.JWT_SECRET,
       {
         expiresIn: "7d",
       }
     );
+    user.role = 1;
+    await user.save();
+
     res.status(200).send({
       success: true,
       message: "login successfully",
-      user: {
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-        address: user.address,
-        instragram: user.instragram,
-        github: user.github,
-        linkedin: user.linkedin,
-        image: user.image,
-        role: user.role,
-      },
+      user,
       token,
     });
   } catch (error) {

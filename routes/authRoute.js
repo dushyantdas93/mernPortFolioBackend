@@ -1,6 +1,6 @@
 import express from "express";
 import {
-  forgotPasswordController,
+
   getAllController,
   getUserController,
   loginController,
@@ -11,13 +11,15 @@ import { isAdmin, requireSignIn } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/register", registerController);
-router.put("/update/:id", updateProfileController);
 router.post("/login", loginController);
-router.post("/forgot-password", forgotPasswordController);
+router.post("/register", registerController);
 
-router.get("/getAll", getAllController);
-router.get("/getUser/:id", getUserController);
+
+router.get("/getAll",requireSignIn,isAdmin, getAllController);
+router.get("/getUser/:id",requireSignIn,isAdmin, getUserController);
+router.put("/updateProfile/:pid",requireSignIn,isAdmin, updateProfileController);
+
+
 router.get("/dashboard", requireSignIn, (req, res) => {
   res.status(200).send({ ok: true });
 });
