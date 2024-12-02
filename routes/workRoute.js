@@ -6,7 +6,7 @@ import { creatWorkController, deleteWorkController, getWorkByIdController, getWo
 const router = express.Router();
 
 router.post("/create", requireSignIn, isAdmin, creatWorkController);
-router.put("/update/:id", requireSignIn, isAdmin, updateWorkController);
+router.put("/:id", requireSignIn, isAdmin, updateWorkController);
 router.get("/get/:id",  getWorkByIdController);
 router.get("/get", getWorkController);
 router.delete("/delete/:id", requireSignIn, isAdmin, deleteWorkController);

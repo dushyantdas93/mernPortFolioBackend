@@ -5,7 +5,7 @@ import { createAboutMeController, deleteAboutMeController, getAboutMeByIdControl
 const router = express.Router();
 
 router.post("/create", requireSignIn, isAdmin, createAboutMeController);
-router.put("/update/:id", requireSignIn, isAdmin, updateAboutMeController);
+router.put("/:id", requireSignIn, isAdmin, updateAboutMeController);
 router.get("/get/:id",  getAboutMeByIdController);
 router.get("/get", getAboutMeController);
 router.delete("/delete/:id", requireSignIn, isAdmin, deleteAboutMeController);

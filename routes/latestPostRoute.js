@@ -5,7 +5,7 @@ import { creatLatestPostController, deleteLatestPostController, getLatestPostByI
 const router = express.Router();
 
 router.post("/create", requireSignIn, isAdmin, creatLatestPostController);
-router.put("/update/:id", requireSignIn, isAdmin, updateLatestPostController);
+router.put("/:id", requireSignIn, isAdmin, updateLatestPostController);
 router.get("/get/:id", getLatestPostByIdController);
 router.get("/get", getLatestPostController);
 router.delete("/delete/:id", requireSignIn, isAdmin, deleteLatestPostController);

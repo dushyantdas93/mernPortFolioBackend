@@ -12,7 +12,7 @@ import {
 const router = express.Router();
 
 router.post("/create", requireSignIn, isAdmin, creatPricingPlanController);
-router.put("/update/:id", requireSignIn, isAdmin, updatePricingPlanController);
+router.put("/:id", requireSignIn, isAdmin, updatePricingPlanController);
 router.get("/get/:id", getPricingPlanByIdController);
 router.get("/delete/:id", deletePricingPlanByIdController);
 router.get("/get", getPricingPlanController);

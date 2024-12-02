@@ -107,8 +107,12 @@ export const updateProfileController = async (req, res) => {
       hashpass = await hashPassword(password);
     }
 
+if(!image || image.length < 1){
+  const user = await User.findById(id)
+image = user?.image
+}
     // Update user
-    const user = await User.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
       userId,
       {
         name,
@@ -127,7 +131,7 @@ export const updateProfileController = async (req, res) => {
     res.status(200).send({
       success: true,
       message: "User updated successfully",
-      user,
+     user: updatedUser,
     });
   } catch (error) {
     console.error("Error updating user:", error);

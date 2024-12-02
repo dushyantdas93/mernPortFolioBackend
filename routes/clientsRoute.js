@@ -7,7 +7,7 @@ import { creatClientsController, deleteClientsController, getClientsByIdControll
 const router = express.Router();
 
 router.post("/create", requireSignIn, isAdmin, creatClientsController);
-router.put("/update/:id", requireSignIn, isAdmin, updateClientsController);
+router.put("/:id", requireSignIn, isAdmin, updateClientsController);
 router.get("/get/:id", getClientsByIdController);
 router.get("/delete/:id", requireSignIn, isAdmin, getClientsByIdController);
 router.get("/get", getClientsController);

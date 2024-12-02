@@ -29,11 +29,11 @@ export const createServiceController = async (req, res) => {
         .status(400)
         .send({ success: false, message: "Valid description is required" });
     }
-    if (typeof recommended !== "boolean") {
-      return res
-        .status(400)
-        .send({ success: false, message: "Recommended must be a boolean" });
-    }
+    // if (typeof recommended !== "boolean") {
+    //   return res
+    //     .status(400)
+    //     .send({ success: false, message: "Recommended must be a boolean" });
+    // }
 
     // Service creation logic
     const createdService = await Service.create({
