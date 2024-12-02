@@ -61,3 +61,130 @@ export const creatExperienceController = async (req, res) => {
     }
   };
   
+
+  export const updateExperienceController = async (req, res) => {
+    try {
+      const { id } = req.params; // Extract the `id` from route parameters
+      const updateData = req.body; // Data to update
+
+      // Validate ID
+      if (!id) {
+        return res.status(400).send({
+          success: false,
+          message: "Experience ID is required for updating",
+        });
+      }
+
+      // Perform update operation
+      const updatedExperience = await Experience.findByIdAndUpdate(
+        id,
+        updateData,
+        { new: true }
+      );
+
+      // Check if the document was found and updated
+      if (!updatedExperience) {
+        return res.status(404).send({
+          success: false,
+          message: "Experience not found or update failed",
+        });
+      }
+
+      // Successful response
+      return res.status(200).send({
+        success: true,
+        data: updatedExperience,
+        message: "Experience updated successfully",
+      });
+    } catch (error) {
+      console.error("Error updating experience:", error);
+      return res.status(500).send({
+        success: false,
+        message: "Error updating experience",
+        error: error.message,
+      });
+    }
+};
+  
+
+
+
+export const deleteExperienceController = async (req, res) => {
+  try {
+    const { id } = req.params; // Extract the `id` from route parameters
+
+    // Validate ID
+    if (!id) {
+      return res.status(400).send({
+        success: false,
+        message: "Experience ID is required for deletion",
+      });
+    }
+
+    // Perform delete operation
+    const deletedExperience = await Experience.findByIdAndDelete(id);
+
+    // Check if the document was found and deleted
+    if (!deletedExperience) {
+      return res.status(404).send({
+        success: false,
+        message: "Experience not found or already deleted",
+      });
+    }
+
+    // Successful response
+    return res.status(200).send({
+      success: true,
+      data: deletedExperience,
+      message: "Experience deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting experience:", error);
+    return res.status(500).send({
+      success: false,
+      message: "Error deleting experience",
+      error: error.message,
+    });
+  }
+};
+
+
+
+export const getExperienceByIdController = async (req, res) => {
+  try {
+    const { id } = req.params; // Extract the `id` from route parameters
+
+    // Validate ID
+    if (!id) {
+      return res.status(400).send({
+        success: false,
+        message: "Experience ID is required to fetch data",
+      });
+    }
+
+    // Perform get operation
+    const experience = await Experience.findById(id);
+
+    // Check if the document was found
+    if (!experience) {
+      return res.status(404).send({
+        success: false,
+        message: "Experience not found",
+      });
+    }
+
+    // Successful response
+    return res.status(200).send({
+      success: true,
+      data: experience,
+      message: "Experience fetched successfully",
+    });
+  } catch (error) {
+    console.error("Error fetching experience by ID:", error);
+    return res.status(500).send({
+      success: false,
+      message: "Error fetching experience",
+      error: error.message,
+    });
+  }
+};

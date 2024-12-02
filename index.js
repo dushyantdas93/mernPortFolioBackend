@@ -8,6 +8,10 @@ import messageRoute from "./routes/messageRoute.js";
 import aboutMeRoute from "./routes/aboutMeRoute.js";
 import experienceRoute from "./routes/experienceRoute.js";
 import workRoute from "./routes/workRoute.js";
+import latestPostRoute from "./routes/latestPostRoute.js";
+import pricingPlanRoute from "./routes/pricingPlanRoute.js";
+
+import clientsRoute from "./routes/clientsRoute.js";
 
 import cors from "cors";
 
@@ -23,12 +27,18 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
-app.use("/api/v1", messageRoute);
 app.use("/api/v1/auth", authRoute);
-app.use("/api/v1/service", serviceRoute);
-app.use("/api/v1/aboutMe", aboutMeRoute);
-app.use("/api/v1/experience", experienceRoute);
+app.use("/api/v1/updateAboutMe", aboutMeRoute);
+app.use("/api/v1/updateServices", serviceRoute);
+app.use("/api/v1/updateCompletion", experienceRoute);
 app.use("/api/v1/updateWork", workRoute);
+app.use("/api/v1/updatePricingPlan", pricingPlanRoute);
+app.use("/api/v1/updateClientReview", clientsRoute);
+app.use("/api/v1/updatePost", latestPostRoute);
+app.use("/api/v1", messageRoute);
+
+
+
 
 
 app.get("/", (req, res) => {

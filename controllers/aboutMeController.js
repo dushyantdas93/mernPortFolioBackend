@@ -44,39 +44,7 @@ export const createAboutMeController = async (req, res) => {
   };
 
   // update
-export const updateAboutMeController = async (req, res) => {
-    try {
-     
-    } catch (error) {
-      console.error("Error updating user:", error);
-      res
-        .status(500)
-        .send({ success: false, message: "Error updating user", error });
-    }
-  };
-// delete
-  export const deleteAboutMeController = async (req, res) => {
-    try {
-     
-    } catch (error) {
-      console.error("Error updating user:", error);
-      res
-        .status(500)
-        .send({ success: false, message: "Error updating user", error });
-    }
-  };
-// get by id 
-  export const getAboutMeByIdController = async (req, res) => {
-    try {
-     
-    } catch (error) {
-      console.error("Error updating user:", error);
-      res
-        .status(500)
-        .send({ success: false, message: "Error updating user", error });
-    }
-  };
-// get all 
+
   export const getAboutMeController = async (req, res) => {
     try {
       const getAll = await AboutMe.find();
@@ -92,4 +60,128 @@ export const updateAboutMeController = async (req, res) => {
         .status(500)
         .send({ success: false, message: "Error updating user", error });
     }
-  };
+};
+  
+
+export const updateAboutMeController = async (req, res) => {
+  try {
+    const { id } = req.params; // Extract the `id` from route parameters
+    const updateData = req.body; // Data to update
+
+    // Validate ID
+    if (!id) {
+      return res.status(400).send({
+        success: false,
+        message: "AboutMe ID is required for updating",
+      });
+    }
+
+    // Perform update operation
+    const updatedAboutMe = await AboutMe.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
+
+    // Check if the document was found and updated
+    if (!updatedAboutMe) {
+      return res.status(404).send({
+        success: false,
+        message: "AboutMe not found or update failed",
+      });
+    }
+
+    // Successful response
+    return res.status(200).send({
+      success: true,
+      data: updatedAboutMe,
+      message: "AboutMe updated successfully",
+    });
+  } catch (error) {
+    console.error("Error updating AboutMe:", error);
+    return res.status(500).send({
+      success: false,
+      message: "Error updating AboutMe",
+      error: error.message,
+    });
+  }
+};
+
+
+
+export const deleteAboutMeController = async (req, res) => {
+  try {
+    const { id } = req.params; // Extract the `id` from route parameters
+
+    // Validate ID
+    if (!id) {
+      return res.status(400).send({
+        success: false,
+        message: "AboutMe ID is required for deletion",
+      });
+    }
+
+    // Perform delete operation
+    const deletedAboutMe = await AboutMe.findByIdAndDelete(id);
+
+    // Check if the document was found and deleted
+    if (!deletedAboutMe) {
+      return res.status(404).send({
+        success: false,
+        message: "AboutMe not found or already deleted",
+      });
+    }
+
+    // Successful response
+    return res.status(200).send({
+      success: true,
+      data: deletedAboutMe,
+      message: "AboutMe deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting AboutMe:", error);
+    return res.status(500).send({
+      success: false,
+      message: "Error deleting AboutMe",
+      error: error.message,
+    });
+  }
+};
+
+
+export const getAboutMeByIdController = async (req, res) => {
+  try {
+    const { id } = req.params; // Extract the `id` from route parameters
+
+    // Validate ID
+    if (!id) {
+      return res.status(400).send({
+        success: false,
+        message: "AboutMe ID is required to fetch data",
+      });
+    }
+
+    // Perform get operation
+    const aboutMe = await AboutMe.findById(id);
+
+    // Check if the document was found
+    if (!aboutMe) {
+      return res.status(404).send({
+        success: false,
+        message: "AboutMe not found",
+      });
+    }
+
+    // Successful response
+    return res.status(200).send({
+      success: true,
+      data: aboutMe,
+      message: "AboutMe fetched successfully",
+    });
+  } catch (error) {
+    console.error("Error fetching AboutMe by ID:", error);
+    return res.status(500).send({
+      success: false,
+      message: "Error fetching AboutMe",
+      error: error.message,
+    });
+  }
+};
