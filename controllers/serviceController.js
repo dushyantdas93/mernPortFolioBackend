@@ -29,11 +29,11 @@ export const createServiceController = async (req, res) => {
         .status(400)
         .send({ success: false, message: "Valid description is required" });
     }
-    if (typeof recommended !== "boolean") {
-      return res
-        .status(400)
-        .send({ success: false, message: "Recommended must be a boolean" });
-    }
+    // if (typeof recommended !== "boolean") {
+    //   return res
+    //     .status(400)
+    //     .send({ success: false, message: "Recommended must be a boolean" });
+    // }
 
     // Service creation logic
     const createdService = await Service.create({
@@ -75,36 +75,58 @@ export const getServicesController = async (req, res) => {
   }
 };
 
+
 export const updateServiceController = async (req, res) => {
   try {
-    const { id } = req.params; // Extract the ID from the request parameters
-    const updateData = req.body; // Extract the data to update from the request body
+    const { img, name, description, recommended } = req.body;
 
-    // Assume you have a Service model
-    const updatedService = await Service.findByIdAndUpdate(id, updateData, {
-      new: true,
-    });
+    // Debugging logs
+    console.log("Request Params:", req.params.id);
+    console.log("Request Body:", req.body);
 
-    if (!updatedService) {
-      return res
-        .status(404)
-        .send({ success: false, message: "Service not found" });
+    if (!Object.keys(req.body).length) {
+      return res.status(400).send({ message: "No data provided to update" });
     }
 
-    res
-      .status(200)
-      .send({
-        success: true,
-        message: "Service updated successfully",
-        data: updatedService,
-      });
+    // Validate User ID format
+    const userId = req.params.id;
+    if (!userId?.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).send({ message: "Invalid user ID format" });
+    }
+
+    // Check if user exists
+    const existingUser = await Experience.findById(userId);
+    if (!existingUser) {
+      return res.status(404).send({ message: "item not found" });
+    }
+
+    // Update user
+    const user = await Experience.findByIdAndUpdate(
+      userId,
+      {
+        img,
+        name,
+        description,
+        recommended,
+      },
+      { new: true }
+    );
+
+    res.status(200).send({
+      success: true,
+      message: "User updated successfully",
+      user,
+    });
   } catch (error) {
-    console.error("Error updating service:", error);
+    console.error("Error updating user:", error);
     res
       .status(500)
-      .send({ success: false, message: "Error updating service", error });
+      .send({ success: false, message: "Error updating user", error });
   }
 };
+
+
+
 
 // delete
  export const deleteServiceController = async (req, res) => {

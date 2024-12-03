@@ -63,45 +63,68 @@ export const createAboutMeController = async (req, res) => {
 };
   
 
+
+
+
 export const updateAboutMeController = async (req, res) => {
   try {
-    const { id } = req.params; // Extract the `id` from route parameters
-    const updateData = req.body; // Data to update
+    const {
+      description,
+      completedProjects,
+      ongoingProjects,
+      remeningProjects,
 
-    // Validate ID
-    if (!id) {
-      return res.status(400).send({
-        success: false,
-        message: "AboutMe ID is required for updating",
-      });
+      webPercentage,
+      designPercentage,
+      animationPercentage,
+    } = req.body;
+
+    // Debugging logs
+    console.log("Request Params:", req.params.id);
+    console.log("Request Body:", req.body);
+
+    if (!Object.keys(req.body).length) {
+      return res.status(400).send({ message: "No data provided to update" });
     }
 
-    // Perform update operation
-    const updatedAboutMe = await AboutMe.findByIdAndUpdate(id, updateData, {
-      new: true,
-    });
-
-    // Check if the document was found and updated
-    if (!updatedAboutMe) {
-      return res.status(404).send({
-        success: false,
-        message: "AboutMe not found or update failed",
-      });
+    // Validate User ID format
+    const userId = req.params.id;
+    if (!userId?.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).send({ message: "Invalid user ID format" });
     }
 
-    // Successful response
-    return res.status(200).send({
+    // Check if user exists
+    const existingUser = await Experience.findById(userId);
+    if (!existingUser) {
+      return res.status(404).send({ message: "item not found" });
+    }
+
+    // Update user
+    const user = await Experience.findByIdAndUpdate(
+      userId,
+      {
+        description,
+        completedProjects,
+        ongoingProjects,
+        remeningProjects,
+
+        webPercentage,
+        designPercentage,
+        animationPercentage,
+      },
+      { new: true }
+    );
+
+    res.status(200).send({
       success: true,
-      data: updatedAboutMe,
-      message: "AboutMe updated successfully",
+      message: "User updated successfully",
+      user,
     });
   } catch (error) {
-    console.error("Error updating AboutMe:", error);
-    return res.status(500).send({
-      success: false,
-      message: "Error updating AboutMe",
-      error: error.message,
-    });
+    console.error("Error updating user:", error);
+    res
+      .status(500)
+      .send({ success: false, message: "Error updating user", error });
   }
 };
 
