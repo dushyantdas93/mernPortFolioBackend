@@ -24,7 +24,11 @@ export const createServiceController = async (req, res) => {
         .status(400)
         .send({ success: false, message: "Valid name is required" });
     }
-    if (!description || typeof description !== "string" || description.trim().length === 0) {
+    if (
+      !description ||
+      typeof description !== "string" ||
+      description.trim().length === 0
+    ) {
       return res
         .status(400)
         .send({ success: false, message: "Valid description is required" });
@@ -52,12 +56,14 @@ export const createServiceController = async (req, res) => {
     });
   } catch (error) {
     console.error("Error creating service:", error);
-    res
-      .status(500)
-      .send({ success: false, message: "Internal server error", error: error.message });
+    res.status(500).send({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
   }
 };
-// get all 
+// get all
 export const getServicesController = async (req, res) => {
   try {
     const getAll = await Service.find();
@@ -67,14 +73,13 @@ export const getServicesController = async (req, res) => {
       getAll,
       message: "getalluser",
     });
-  }  catch (error) {
+  } catch (error) {
     console.error("Error updating user:", error);
     res
       .status(500)
       .send({ success: false, message: "Error updating user", error });
   }
 };
-
 
 export const updateServiceController = async (req, res) => {
   try {
@@ -95,13 +100,13 @@ export const updateServiceController = async (req, res) => {
     }
 
     // Check if user exists
-    const existingUser = await Experience.findById(userId);
+    const existingUser = await Service.findById(userId);
     if (!existingUser) {
       return res.status(404).send({ message: "item not found" });
     }
 
     // Update user
-    const user = await Experience.findByIdAndUpdate(
+    const user = await Service.findByIdAndUpdate(
       userId,
       {
         img,
@@ -125,59 +130,53 @@ export const updateServiceController = async (req, res) => {
   }
 };
 
-
-
-
 // delete
- export const deleteServiceController = async (req, res) => {
-   try {
-     const { id } = req.params; // Get the ID from the request parameters
-     // Perform delete operation (Assume you have a Service model)
-     const deletedService = await Service.findByIdAndDelete(id);
+export const deleteServiceController = async (req, res) => {
+  try {
+    const { id } = req.params; // Get the ID from the request parameters
+    // Perform delete operation (Assume you have a Service model)
+    const deletedService = await Service.findByIdAndDelete(id);
 
-     if (!deletedService) {
-       return res
-         .status(404)
-         .send({ success: false, message: "Service not found" });
-     }
-
-     res
-       .status(200)
-       .send({ success: true, message: "Service deleted successfully" });
-   } catch (error) {
-     console.error("Error deleting service:", error);
-     res
-       .status(500)
-       .send({ success: false, message: "Error deleting service", error });
-   }
- };
-
-// get by id 
-  export const getServiceByIdController = async (req, res) => {
-    try {
-      const { id } = req.params; // Extract the ID from the request parameters
-
-      // Assume you have a Service model
-      const service = await Service.findById(id);
-
-      if (!service) {
-        return res
-          .status(404)
-          .send({ success: false, message: "Service not found" });
-      }
-
-      res
-        .status(200)
-        .send({
-          success: true,
-          message: "Service fetched successfully",
-          data: service,
-        });
-    } catch (error) {
-      console.error("Error fetching service:", error);
-      res
-        .status(500)
-        .send({ success: false, message: "Error fetching service", error });
+    if (!deletedService) {
+      return res
+        .status(404)
+        .send({ success: false, message: "Service not found" });
     }
-  };
 
+    res
+      .status(200)
+      .send({ success: true, message: "Service deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting service:", error);
+    res
+      .status(500)
+      .send({ success: false, message: "Error deleting service", error });
+  }
+};
+
+// get by id
+export const getServiceByIdController = async (req, res) => {
+  try {
+    const { id } = req.params; // Extract the ID from the request parameters
+
+    // Assume you have a Service model
+    const service = await Service.findById(id);
+
+    if (!service) {
+      return res
+        .status(404)
+        .send({ success: false, message: "Service not found" });
+    }
+
+    res.status(200).send({
+      success: true,
+      message: "Service fetched successfully",
+      data: service,
+    });
+  } catch (error) {
+    console.error("Error fetching service:", error);
+    res
+      .status(500)
+      .send({ success: false, message: "Error fetching service", error });
+  }
+};

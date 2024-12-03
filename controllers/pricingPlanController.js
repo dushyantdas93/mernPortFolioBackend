@@ -114,13 +114,13 @@ export const updatePricingPlanController = async (req, res) => {
     }
 
     // Check if user exists
-    const existingUser = await Experience.findById(userId);
+    const existingUser = await PricingPlanfindById(userId);
     if (!existingUser) {
       return res.status(404).send({ message: "item not found" });
     }
 
     // Update user
-    const user = await Experience.findByIdAndUpdate(
+    const user = await PricingPlanfindByIdAndUpdate(
       userId,
       {
         category,
