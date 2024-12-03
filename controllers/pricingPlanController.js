@@ -95,46 +95,53 @@ export const deletePricingPlanController = async (req, res) => {
 };
 
 
-
 export const updatePricingPlanController = async (req, res) => {
   try {
-    const { id } = req.params; // Extract the `id` from route parameters
-    const updateData = req.body; // Data to update
+    const { category, description, price, supports, image } = req.body;
 
-    // Validate ID
-    if (!id) {
-      return res.status(400).send({
-        success: false,
-        message: "Pricing Plan ID is required for updating",
-      });
+    // Debugging logs
+    console.log("Request Params:", req.params.id);
+    console.log("Request Body:", req.body);
+
+    if (!Object.keys(req.body).length) {
+      return res.status(400).send({ message: "No data provided to update" });
     }
 
-    // Perform update operation
-    const updatedPlan = await PricingPlan.findByIdAndUpdate(id, updateData, {
-      new: true,
-    });
-
-    // Check if the plan was found and updated
-    if (!updatedPlan) {
-      return res.status(404).send({
-        success: false,
-        message: "Pricing Plan not found or update failed",
-      });
+    // Validate User ID format
+    const userId = req.params.id;
+    if (!userId?.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).send({ message: "Invalid user ID format" });
     }
 
-    // Successful response
-    return res.status(200).send({
+    // Check if user exists
+    const existingUser = await PricingPlan.findById(userId);
+    if (!existingUser) {
+      return res.status(404).send({ message: "item not found" });
+    }
+
+    // Update user
+    const user = await PricingPlan.findByIdAndUpdate(
+      userId,
+      {
+        category,
+        description,
+        price,
+        supports,
+        image,
+      },
+      { new: true }
+    );
+
+    res.status(200).send({
       success: true,
-      data: updatedPlan,
-      message: "Pricing Plan updated successfully",
+      message: "User updated successfully",
+      user,
     });
   } catch (error) {
-    console.error("Error updating Pricing Plan:", error);
-    return res.status(500).send({
-      success: false,
-      message: "Error updating Pricing Plan",
-      error: error.message,
-    });
+    console.error("Error updating user:", error);
+    res
+      .status(500)
+      .send({ success: false, message: "Error updating user", error });
   }
 };
 

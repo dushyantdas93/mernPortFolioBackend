@@ -38,7 +38,57 @@ export const creatWorkController = async (req, res) => {
         .status(500)
         .send({ success: false, message: "Internal server error", error: error.message });
     }
-  };
+};
+  
+export const updateWorkController = async (req, res) => {
+  try {
+    const { screenshot, category, name, link } = req.body;
+
+    // Debugging logs
+    console.log("Request Params:", req.params.id);
+    console.log("Request Body:", req.body);
+
+    if (!Object.keys(req.body).length) {
+      return res.status(400).send({ message: "No data provided to update" });
+    }
+
+    // Validate User ID format
+    const userId = req.params.id;
+    if (!userId?.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).send({ message: "Invalid user ID format" });
+    }
+
+    // Check if user exists
+    const existingUser = await Work.findById(userId);
+    if (!existingUser) {
+      return res.status(404).send({ message: "item not found" });
+    }
+
+    // Update user
+    const user = await Work.findByIdAndUpdate(
+      userId,
+      {
+        screenshot,
+        category,
+        name,
+        link,
+      },
+      { new: true }
+    );
+
+    res.status(200).send({
+      success: true,
+      message: "User updated successfully",
+      user,
+    });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res
+      .status(500)
+      .send({ success: false, message: "Error updating user", error });
+  }
+};
+
   // get all 
   export const getWorkController = async (req, res) => {
     try {
@@ -98,47 +148,7 @@ export const deleteWorkController = async (req, res) => {
 
 
 
-export const updateWorkController = async (req, res) => {
-  try {
-    const { id } = req.params; // Extract the `id` from route parameters
-    const updateData = req.body; // Data to be updated
 
-    // Validate ID
-    if (!id) {
-      return res.status(400).send({
-        success: false,
-        message: "Work ID is required for updating",
-      });
-    }
-
-    // Perform update operation
-    const updatedWork = await Work.findByIdAndUpdate(id, updateData, {
-      new: true,
-    });
-
-    // Check if the work entry was found and updated
-    if (!updatedWork) {
-      return res.status(404).send({
-        success: false,
-        message: "Work not found or update failed",
-      });
-    }
-
-    // Successful response
-    return res.status(200).send({
-      success: true,
-      data: updatedWork,
-      message: "Work updated successfully",
-    });
-  } catch (error) {
-    console.error("Error updating work:", error);
-    return res.status(500).send({
-      success: false,
-      message: "Error updating work",
-      error,
-    });
-  }
-};
 
 
 export const getWorkByIdController = async (req, res) => {

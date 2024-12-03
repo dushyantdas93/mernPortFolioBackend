@@ -24,7 +24,11 @@ export const createServiceController = async (req, res) => {
         .status(400)
         .send({ success: false, message: "Valid name is required" });
     }
-    if (!description || typeof description !== "string" || description.trim().length === 0) {
+    if (
+      !description ||
+      typeof description !== "string" ||
+      description.trim().length === 0
+    ) {
       return res
         .status(400)
         .send({ success: false, message: "Valid description is required" });
@@ -52,12 +56,14 @@ export const createServiceController = async (req, res) => {
     });
   } catch (error) {
     console.error("Error creating service:", error);
-    res
-      .status(500)
-      .send({ success: false, message: "Internal server error", error: error.message });
+    res.status(500).send({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
   }
 };
-// get all 
+// get all
 export const getServicesController = async (req, res) => {
   try {
     const getAll = await Service.find();
@@ -67,7 +73,7 @@ export const getServicesController = async (req, res) => {
       getAll,
       message: "getalluser",
     });
-  }  catch (error) {
+  } catch (error) {
     console.error("Error updating user:", error);
     res
       .status(500)
@@ -77,15 +83,61 @@ export const getServicesController = async (req, res) => {
 
 export const updateServiceController = async (req, res) => {
   try {
-    const { id } = req.params; // Extract the ID from the request parameters
-    const updateData = req.body; // Extract the data to update from the request body
+    const { img, name, description, recommended } = req.body;
 
-    // Assume you have a Service model
-    const updatedService = await Service.findByIdAndUpdate(id, updateData, {
-      new: true,
+    // Debugging logs
+    console.log("Request Params:", req.params.id);
+    console.log("Request Body:", req.body);
+
+    if (!Object.keys(req.body).length) {
+      return res.status(400).send({ message: "No data provided to update" });
+    }
+
+    // Validate User ID format
+    const userId = req.params.id;
+    if (!userId?.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).send({ message: "Invalid user ID format" });
+    }
+
+    // Check if user exists
+    const existingUser = await Service.findById(userId);
+    if (!existingUser) {
+      return res.status(404).send({ message: "item not found" });
+    }
+
+    // Update user
+    const user = await Service.findByIdAndUpdate(
+      userId,
+      {
+        img,
+        name,
+        description,
+        recommended,
+      },
+      { new: true }
+    );
+
+    res.status(200).send({
+      success: true,
+      message: "User updated successfully",
+      user,
     });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res
+      .status(500)
+      .send({ success: false, message: "Error updating user", error });
+  }
+};
 
-    if (!updatedService) {
+// delete
+export const deleteServiceController = async (req, res) => {
+  try {
+    const { id } = req.params; // Get the ID from the request parameters
+    // Perform delete operation (Assume you have a Service model)
+    const deletedService = await Service.findByIdAndDelete(id);
+
+    if (!deletedService) {
       return res
         .status(404)
         .send({ success: false, message: "Service not found" });
@@ -93,69 +145,38 @@ export const updateServiceController = async (req, res) => {
 
     res
       .status(200)
-      .send({
-        success: true,
-        message: "Service updated successfully",
-        data: updatedService,
-      });
+      .send({ success: true, message: "Service deleted successfully" });
   } catch (error) {
-    console.error("Error updating service:", error);
+    console.error("Error deleting service:", error);
     res
       .status(500)
-      .send({ success: false, message: "Error updating service", error });
+      .send({ success: false, message: "Error deleting service", error });
   }
 };
 
-// delete
- export const deleteServiceController = async (req, res) => {
-   try {
-     const { id } = req.params; // Get the ID from the request parameters
-     // Perform delete operation (Assume you have a Service model)
-     const deletedService = await Service.findByIdAndDelete(id);
+// get by id
+export const getServiceByIdController = async (req, res) => {
+  try {
+    const { id } = req.params; // Extract the ID from the request parameters
 
-     if (!deletedService) {
-       return res
-         .status(404)
-         .send({ success: false, message: "Service not found" });
-     }
+    // Assume you have a Service model
+    const service = await Service.findById(id);
 
-     res
-       .status(200)
-       .send({ success: true, message: "Service deleted successfully" });
-   } catch (error) {
-     console.error("Error deleting service:", error);
-     res
-       .status(500)
-       .send({ success: false, message: "Error deleting service", error });
-   }
- };
-
-// get by id 
-  export const getServiceByIdController = async (req, res) => {
-    try {
-      const { id } = req.params; // Extract the ID from the request parameters
-
-      // Assume you have a Service model
-      const service = await Service.findById(id);
-
-      if (!service) {
-        return res
-          .status(404)
-          .send({ success: false, message: "Service not found" });
-      }
-
-      res
-        .status(200)
-        .send({
-          success: true,
-          message: "Service fetched successfully",
-          data: service,
-        });
-    } catch (error) {
-      console.error("Error fetching service:", error);
-      res
-        .status(500)
-        .send({ success: false, message: "Error fetching service", error });
+    if (!service) {
+      return res
+        .status(404)
+        .send({ success: false, message: "Service not found" });
     }
-  };
 
+    res.status(200).send({
+      success: true,
+      message: "Service fetched successfully",
+      data: service,
+    });
+  } catch (error) {
+    console.error("Error fetching service:", error);
+    res
+      .status(500)
+      .send({ success: false, message: "Error fetching service", error });
+  }
+};

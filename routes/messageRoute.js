@@ -50,6 +50,8 @@ router.post("/message", async (req, res) => {
   }
 });
 
+
+
 router.get("/message/getAll",requireSignIn,isAdmin, async (req, res) => {
   try {
     // Fetch all messages from the database

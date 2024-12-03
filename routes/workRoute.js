@@ -1,7 +1,12 @@
 import express from "express";
 import { isAdmin, requireSignIn } from "../middleware/authMiddleware.js";
-import { creatWorkController, deleteWorkController, getWorkByIdController, getWorkController, updateWorkController } from "../controllers/workController.js";
-
+import {
+  creatWorkController,
+  deleteWorkController,
+  getWorkByIdController,
+  getWorkController,
+  updateWorkController,
+} from "../controllers/workController.js";
 
 const router = express.Router();
 

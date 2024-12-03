@@ -28,18 +28,14 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 app.use("/api/v1/auth", authRoute);
-app.use("/api/v1/updateAboutMe", aboutMeRoute);
-app.use("/api/v1/updateServices", serviceRoute);
-app.use("/api/v1/updateCompletion", experienceRoute);
-app.use("/api/v1/updateWork", workRoute);
-app.use("/api/v1/updatePricingPlan", pricingPlanRoute);
-app.use("/api/v1/updateClientReview", clientsRoute);
-app.use("/api/v1/updatePost", latestPostRoute);
-app.use("/api/v1", messageRoute);
-
-
-
-
+app.use("/api/v1/admin/updateAboutMe", aboutMeRoute);
+app.use("/api/v1/admin/updateServices", serviceRoute);
+app.use("/api/v1/admin/updateCompletion", experienceRoute);
+app.use("/api/v1/admin/updateWork", workRoute);
+app.use("/api/v1/admin/updatePricingPlan", pricingPlanRoute);
+app.use("/api/v1/admin/updateClientReview", clientsRoute);
+app.use("/api/v1/admin/updatePost", latestPostRoute);
+app.use("/api/v1/admin", messageRoute);
 
 app.get("/", (req, res) => {
   res.send({ message: "welcome to ecommerce app" });

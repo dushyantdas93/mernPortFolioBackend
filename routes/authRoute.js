@@ -1,6 +1,5 @@
 import express from "express";
 import {
-
   getAllController,
   getUserController,
   loginController,
@@ -14,16 +13,19 @@ const router = express.Router();
 router.post("/login", loginController);
 router.post("/register", registerController);
 
-
-router.get("/getAll",requireSignIn,isAdmin, getAllController);
-router.get("/getUser/:id",requireSignIn,isAdmin, getUserController);
-router.put("/updateProfile/:pid",requireSignIn,isAdmin, updateProfileController);
-
+router.get("/getAll", getAllController);
+router.get("/getUser/:id", requireSignIn, isAdmin, getUserController);
+router.put(
+  "/updateProfile/:pid",
+  requireSignIn,
+  isAdmin,
+  updateProfileController
+);
 
 router.get("/dashboard", requireSignIn, (req, res) => {
   res.status(200).send({ ok: true });
 });
-router.get("/dashboard/admin", requireSignIn,isAdmin, (req, res) => {
+router.get("/dashboard/admin", requireSignIn, isAdmin, (req, res) => {
   res.status(200).send({ ok: true });
 });
 
