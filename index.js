@@ -35,7 +35,7 @@ app.use("/api/v1/admin/updateWork", workRoute);
 app.use("/api/v1/admin/updatePricingPlan", pricingPlanRoute);
 app.use("/api/v1/admin/updateClientReview", clientsRoute);
 app.use("/api/v1/admin/updatePost", latestPostRoute);
-app.use("/api/v1", messageRoute);
+app.use("/api/v1/admin", messageRoute);
 
 app.get("/", (req, res) => {
   res.send({ message: "welcome to ecommerce app" });
