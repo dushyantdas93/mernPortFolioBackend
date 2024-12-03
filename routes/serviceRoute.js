@@ -11,7 +11,7 @@ import {
 const router = express.Router();
 
 router.post("/create", requireSignIn, isAdmin, createServiceController);
-router.put("/update/:id", requireSignIn, isAdmin, updateServiceController);
+router.put("/:id", requireSignIn, isAdmin, updateServiceController);
 router.get("/get/:id", getServiceByIdController);
 router.get("/get", getServicesController);
 router.delete("/delete/:id", requireSignIn, isAdmin, deleteServiceController);

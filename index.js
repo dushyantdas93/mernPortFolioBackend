@@ -37,10 +37,6 @@ app.use("/api/v1/updateClientReview", clientsRoute);
 app.use("/api/v1/updatePost", latestPostRoute);
 app.use("/api/v1", messageRoute);
 
-
-
-
-
 app.get("/", (req, res) => {
   res.send({ message: "welcome to ecommerce app" });
 });
