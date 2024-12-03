@@ -10,7 +10,7 @@ export const  registerController = async (req, res) => {
       email,
       password,
       phone,
-      instragram,
+      instagram,
       github,
       linkedin,
       role,
@@ -47,7 +47,7 @@ export const  registerController = async (req, res) => {
       email,
       role,
       password: hashpass,
-      instragram,
+      instagram,
       phone,
       github,
       linkedin,
@@ -74,7 +74,7 @@ export const updateProfileController = async (req, res) => {
       email,
       password,
       phone,
-      instragram,
+      instagram,
       github,
       linkedin,
       role,
@@ -106,10 +106,10 @@ export const updateProfileController = async (req, res) => {
     if (password) {
       hashpass = await hashPassword(password);
     }
+ let existingImage ="";
 
 if(!image || image.length < 1){
-  const user = await User.findById(id)
-image = user?.image
+existingImage = existingUser?.image
 }
     // Update user
     const updatedUser = await User.findByIdAndUpdate(
@@ -119,11 +119,11 @@ image = user?.image
         email,
         role,
         password: hashpass,
-        instragram,
+        instagram,
         phone,
         github,
         linkedin,
-        image,
+        image:image?image:existingImage,
       },
       { new: true }
     );

@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema(
     },
     password: { type: String, require: true },
     phone: { type: String, require: true },
-    instragram: { type: String },
+    instagram: { type: String },
     image: { type: String },
     github: { type: String },
     linkedin: { type: String },
